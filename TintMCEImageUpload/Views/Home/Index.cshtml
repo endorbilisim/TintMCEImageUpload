@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="//cdn.tinymce.com/4.7/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            file_picker_types: 'image',
+            images_upload_url: "/Upload",
+            theme: 'modern',
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools'
+            ],
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'print preview media | forecolor backcolor emoticons ',
+            image_advtab: true,
+        });
+
+        function upload(form) {
+            tinymce.activeEditor.uploadImages(function (success) {
+                tinymce.activeEditor.execCommand("mceInsertContent", true, "<img src='" + data + "' alt='Uploaded Image' class='img-responsive' />");
+            });
+            return false;
+        }
+    </script>
+
+}
+
+<h2>Edit Post</h2>
+
+@using (Html.BeginForm("Edit", "Post", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label>Post Name</label>
+            <div class="col-md-10">
+                <input name="PostName" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Post Content</label>
+            <div class="col-md-10">
+                <textarea style="width:1000px; min-height:800px" id="PostContent" name="PostContent"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
